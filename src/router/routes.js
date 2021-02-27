@@ -8,8 +8,7 @@ const routes = [
     ]
   },
 
-  // Always leave this as last one,
-  // but you can also remove it
+  // 404
   {
     path: '*',
     component: () => import('pages/Error404.vue')

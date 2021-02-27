@@ -12,10 +12,17 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+          Mechmarket Post Assistant
         </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <div>Current version: {{version}} </div>
+        <q-toggle
+          color="indigo-10"
+          v-model="darkMode"
+          @input="changeDarkMode"
+          checked-icon="nights_stay"
+          unchecked-icon="wb_sunny"
+        />
       </q-toolbar>
     </q-header>
 
@@ -23,17 +30,16 @@
       v-model="leftDrawerOpen"
       show-if-above
       bordered
-      content-class="bg-grey-1"
     >
       <q-list>
         <q-item-label
           header
           class="text-grey-8"
         >
-          Essential Links
+          About
         </q-item-label>
-        <EssentialLink
-          v-for="link in essentialLinks"
+        <About
+          v-for="link in aboutLinks"
           :key="link.title"
           v-bind="link"
         />
@@ -46,61 +52,62 @@
   </q-layout>
 </template>
 
+<style scoped>
+
+.q-header {
+  background-image: linear-gradient(
+    to right,
+    #fbc2eb 0%,
+    #a6c1ee 51%,
+    #fbc2eb 100%
+  );
+  background-size: 200% auto;
+  transition: background-position 0.2s;
+}
+
+</style>
+
 <script>
-import EssentialLink from 'components/EssentialLink.vue'
+import About from 'components/About.vue'
+import { version } from '../../package.json'
 
 const linksData = [
+
   {
-    title: 'Docs',
+    title: 'Github',
+    caption: 'github.com/Legoota/mmpa',
+    icon: 'code',
+    link: 'https://github.com/Legoota/Mechmarket-post-assistant'
+  },
+  {
+    title: 'Made using Quasar',
     caption: 'quasar.dev',
     icon: 'school',
     link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
   }
 ]
 
 export default {
   name: 'MainLayout',
-  components: { EssentialLink },
+  components: { About },
+  created () {
+    this.darkMode = this.$q.dark.isActive
+  },
   data () {
     return {
       leftDrawerOpen: false,
-      essentialLinks: linksData
+      aboutLinks: linksData,
+      version: version,
+      darkMode: null
+    }
+  },
+  watch: {
+    '$q.dark.isActive' (val) { this.darkMode = val }
+  },
+  methods: {
+    changeDarkMode (val) {
+      this.darkMode = val
+      this.$q.dark.set(val)
     }
   }
 }
