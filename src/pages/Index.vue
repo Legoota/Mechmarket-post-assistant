@@ -14,25 +14,32 @@
           <q-card-section class="q-pt-none">
             <div class="text-subtitle1 text-weight-bold">Title of post</div>
             <div class="text-subtitle2">Country</div>
-            <q-select
-              filled
-              v-model="country"
-              :options="region"
-              label="Select"
-            />
-            <q-select v-if="detailRegion.length > 0"
-              filled
-              v-model="location"
-              :options="detailRegion"
-              label="Select"
-            />
-            <q-input v-else-if="country.length > 0"
-              debounce="400"
-              mask="AA"
-              filled
-              v-model="location"
-              label="Country 2-letter code"
-            />
+            <div class="row">
+              <div class="col">
+                <q-select
+                  filled
+                  v-model="country"
+                  :options="region"
+                  label="Select"
+                />
+              </div>
+              <div class="col-1"></div>
+              <div class="col">
+                <q-select v-if="detailRegion.length > 0"
+                  filled
+                  v-model="location"
+                  :options="detailRegion"
+                  label="Select"
+                />
+                <q-input v-else-if="country.length > 0"
+                  debounce="400"
+                  mask="AA"
+                  filled
+                  v-model="location"
+                  label="Country 2-letter code"
+                />
+              </div>
+            </div>
             <br/>
             <div class="text-subtitle2">What you have</div>
             <q-input
