@@ -48,7 +48,8 @@
               v-model="haves"
               label="Type here what you have..."
             />
-            <q-checkbox v-model="havePaypal" label="Paypal" />
+            <q-checkbox v-model="haveChecked" label="Paypal" val="Paypal" />
+            <q-checkbox v-model="haveChecked" label="Artisans" val="Artisans" />
             <br/>
             <div class="text-subtitle2">What you want</div>
             <q-input
@@ -57,7 +58,8 @@
               v-model="wants"
               label="Type here what you want..."
             />
-            <q-checkbox v-model="wantPaypal" label="Paypal" />
+            <q-checkbox v-model="wantChecked" label="Paypal" val="Paypal" />
+            <q-checkbox v-model="wantChecked" label="Artisans" val="Artisans" />
           </q-card-section>
         </q-card>
       </div>
@@ -116,8 +118,8 @@ export default {
       location: '',
       haves: '',
       wants: '',
-      havePaypal: false,
-      wantPaypal: false
+      haveChecked: [],
+      wantChecked: []
     }
   },
   watch: {
@@ -135,16 +137,16 @@ export default {
       else return this.country + '-' + this.location
     },
     haveDisp () {
-      if (this.haves.length === 0 && !this.havePaypal) return '-'
-      if (this.havePaypal && this.haves.length > 0) return this.haves + ', Paypal'
-      else if (this.havePaypal && this.haves.length === 0) return 'Paypal'
-      else return this.haves
+      if (this.haves.length === 0 && this.haveChecked.length === 0) return '-'
+      else if (this.haves.length > 0 && this.haveChecked.length === 0) return this.haves
+      else if (this.haves.length === 0 && this.haveChecked.length > 0) return this.haveChecked.join(', ')
+      else return this.haves + ', ' + this.haveChecked.join(', ')
     },
     wantDisp () {
-      if (this.wants.length === 0 && !this.wantPaypal) return '-'
-      if (this.wantPaypal && this.wants.length > 0) return this.wants + ', Paypal'
-      else if (this.wantPaypal && this.wants.length === 0) return 'Paypal'
-      else return this.wants
+      if (this.wants.length === 0 && this.wantChecked.length === 0) return '-'
+      else if (this.wants.length > 0 && this.wantChecked.length === 0) return this.wants
+      else if (this.wants.length === 0 && this.wantChecked.length > 0) return this.wantChecked.join(', ')
+      else return this.wants + ', ' + this.wantChecked.join(', ')
     },
     copyTitle () {
       copyToClipboard('[' + this.countryDisp() + '] [H] ' + this.haveDisp() + ' [W] ' + this.wantDisp())
