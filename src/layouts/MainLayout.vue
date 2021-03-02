@@ -95,11 +95,14 @@ export default {
   },
   data () {
     return {
-      leftDrawerOpen: false,
+      leftDrawerOpen: null,
       aboutLinks: linksData,
       version: version,
       darkMode: null
     }
+  },
+  mounted () {
+    this.leftDrawerOpen = false
   },
   watch: {
     '$q.dark.isActive' (val) { this.darkMode = val }
