@@ -81,6 +81,16 @@
                 <q-checkbox v-model="noTimestamp" label="No timestamp"/>
               </div>
             </div>
+            <br/>
+            <div class="text-subtitle2">Editor</div>
+            <q-editor v-model="editor" min-height="5rem" />
+            <br/>
+            <div class="text-subtitle2">Usual options</div>
+            <q-checkbox v-model="commentWhenPm" label="Comment when PMing"/>
+            <q-checkbox v-model="chat" label="No Reddit Chat"/>
+            <q-checkbox v-model="proxy" label="Proxy available"/>
+            <q-checkbox v-if="regionOnly().length > 0" v-model="regionLock" :label="regionOnly()"/>
+            <br/>
           </q-card-section>
         </q-card>
       </div>
@@ -109,9 +119,15 @@
             <div class="text-subtitle1 text-weight-bold">Body of post
               <q-btn round size="xs" @click="copyPost()" color="info" icon="content_copy" />
             </div>
-            <pre class="postPart">
+<pre class="postPart">
 <code v-if="timestamp && !noTimestamp">[Timestamp]({{timestamp}}){{newLineTrailingSpaces()}}</code>
-            </pre>
+{{randomGreet+'!'+newLineTrailingSpaces()}}
+{{newLineTrailingSpaces()}}
+{{editor}}
+{{newLineTrailingSpaces()}}
+{{options()+newLineTrailingSpaces()}}
+{{randomFarewell+'!'}}
+</pre>
           </q-card-section>
         </q-card>
       </div>
@@ -153,7 +169,12 @@ export default {
       haveChecked: [],
       wantChecked: [],
       timestamp: null,
-      noTimestamp: false
+      noTimestamp: false,
+      editor: 'Write here...',
+      chat: false,
+      commentWhenPm: false,
+      regionLock: false,
+      proxy: false
     }
   },
   watch: {
@@ -162,6 +183,14 @@ export default {
       if (n === 'CA') this.detailRegion = canada
       else if (n === 'US') this.detailRegion = usa
       else this.detailRegion = []
+    }
+  },
+  computed: {
+    randomGreet () {
+      return greetings[Math.floor(Math.random() * greetings.length)]
+    },
+    randomFarewell () {
+      return farewells[Math.floor(Math.random() * farewells.length)]
     }
   },
   methods: {
@@ -212,14 +241,22 @@ export default {
           })
         })
     },
-    get randomGreet () {
-      return greetings[Math.floor(Math.random() * greetings.length)]
-    },
-    get randomFarewell () {
-      return farewells[Math.floor(Math.random() * farewells.length)]
-    },
     newLineTrailingSpaces () {
       return '  '
+    },
+    regionOnly () {
+      if (this.country === 'EU') return 'EU Only'
+      else if (this.country === 'CA' || this.country === 'US') return 'Canada/CONUS Only.'
+      else return ''
+    },
+    options () {
+      var res = ''
+      if (this.commentWhenPm) res += 'Please comment when you PM me. '
+      if (this.chat) res += 'Avoid using Reddit chat. '
+      res += this.regionOnly() + ' '
+      if (this.proxy) res += 'Proxy available. '
+
+      return res
     }
   }
 }
