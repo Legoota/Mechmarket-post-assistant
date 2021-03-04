@@ -40,7 +40,7 @@
                 />
               </div>
             </div>
-            <br/>
+            <br/><br/>
             <div class="text-subtitle2">What you have</div>
             <q-input
               debounce="400"
@@ -50,7 +50,7 @@
             />
             <q-checkbox v-model="haveChecked" label="Paypal" val="Paypal" />
             <q-checkbox v-model="haveChecked" label="Artisans" val="Artisans" />
-            <br/>
+            <br/><br/>
             <div class="text-subtitle2">What you want</div>
             <q-input
               debounce="400"
@@ -60,6 +60,27 @@
             />
             <q-checkbox v-model="wantChecked" label="Paypal" val="Paypal" />
             <q-checkbox v-model="wantChecked" label="Artisans" val="Artisans" />
+          </q-card-section>
+
+          <q-separator inset /> <br/>
+
+          <q-card-section class="q-pt-none">
+            <div class="text-subtitle1 text-weight-bold">Body of post</div>
+            <div class="text-subtitle2">Timestamp link</div>
+            <div class="row">
+              <div class="col">
+                <q-input
+                  filled
+                  :disable="noTimestamp"
+                  debounce="400"
+                  v-model="timestamp"
+                  label="Paste timestamp link..."
+                />
+              </div>
+              <div class="col">
+                <q-checkbox v-model="noTimestamp" label="No timestamp"/>
+              </div>
+            </div>
           </q-card-section>
         </q-card>
       </div>
@@ -77,9 +98,20 @@
             <div class="text-subtitle1 text-weight-bold">Title of post
               <q-btn round size="xs" @click="copyTitle()" color="info" icon="content_copy" />
             </div> <br/>
-            <code class="postTitle">
+            <code class="postPart">
 [{{countryDisp()}}] [H] {{haveDisp()}} [W] {{wantDisp()}}
             </code>
+          </q-card-section>
+
+          <q-separator inset /> <br/>
+
+          <q-card-section class="q-pt-none">
+            <div class="text-subtitle1 text-weight-bold">Body of post
+              <q-btn round size="xs" @click="copyPost()" color="info" icon="content_copy" />
+            </div>
+            <pre class="postPart">
+<code v-if="timestamp && !noTimestamp">[Timestamp]({{timestamp}}){{newLineTrailingSpaces()}}</code>
+            </pre>
           </q-card-section>
         </q-card>
       </div>
@@ -88,13 +120,13 @@
 </template>
 
 <style scoped>
-.body--light .postTitle {
+.body--light .postPart {
   background-color: #f2f2f2;
   padding: .4em;
   border-radius: .4em;
 }
 
-.body--dark .postTitle {
+.body--dark .postPart {
   background-color: #2d2d2d;
   padding: .4em;
   border-radius: .4em;
@@ -102,8 +134,8 @@
 </style>
 
 <script>
-import { usa } from '../assets/region-usa'
-import { canada } from '../assets/region-canada'
+import { usa, canada } from '../assets/regions'
+import { greetings, farewells } from '../assets/politeness'
 import { copyToClipboard } from 'quasar'
 
 const regions = ['CA', 'EU', 'US', 'Rest of world']
@@ -119,7 +151,9 @@ export default {
       haves: '',
       wants: '',
       haveChecked: [],
-      wantChecked: []
+      wantChecked: [],
+      timestamp: null,
+      noTimestamp: false
     }
   },
   watch: {
@@ -162,6 +196,30 @@ export default {
             color: 'negative'
           })
         })
+    },
+    copyPost () {
+      copyToClipboard('//TODO')
+        .then(() => {
+          this.$q.notify({
+            message: 'Copied to clipboard',
+            color: 'positive'
+          })
+        })
+        .catch(() => {
+          this.$q.notify({
+            message: 'Failed to copy to clipboard',
+            color: 'negative'
+          })
+        })
+    },
+    get randomGreet () {
+      return greetings[Math.floor(Math.random() * greetings.length)]
+    },
+    get randomFarewell () {
+      return farewells[Math.floor(Math.random() * farewells.length)]
+    },
+    newLineTrailingSpaces () {
+      return '  '
     }
   }
 }
