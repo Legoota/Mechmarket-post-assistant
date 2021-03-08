@@ -49,6 +49,7 @@
               label="Type here what you have..."
             />
             <q-checkbox v-model="haveChecked" label="Paypal" val="Paypal" />
+            <q-checkbox v-model="haveChecked" label="Local cash" val="Local cash" />
             <q-checkbox v-model="haveChecked" label="Artisans" val="Artisans" />
             <br/><br/>
             <div class="text-subtitle2">What you want</div>
@@ -59,6 +60,7 @@
               label="Type here what you want..."
             />
             <q-checkbox v-model="wantChecked" label="Paypal" val="Paypal" />
+            <q-checkbox v-model="wantChecked" label="Local cash" val="Local cash" />
             <q-checkbox v-model="wantChecked" label="Artisans" val="Artisans" />
           </q-card-section>
 
