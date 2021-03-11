@@ -91,7 +91,9 @@ export default {
   name: 'MainLayout',
   components: { About },
   created () {
-    this.darkMode = this.$q.dark.isActive
+    if (this.$q.localStorage.getItem('dark') != null) {
+      this.darkMode = this.$q.localStorage.getItem('dark')
+    } else this.darkMode = this.$q.dark.isActive
   },
   data () {
     return {
@@ -103,6 +105,9 @@ export default {
   },
   mounted () {
     this.leftDrawerOpen = false
+    if (this.$q.localStorage.getItem('dark') != null) {
+      this.darkMode = this.$q.localStorage.getItem('dark')
+    }
   },
   watch: {
     '$q.dark.isActive' (val) { this.darkMode = val }
@@ -111,6 +116,7 @@ export default {
     changeDarkMode (val) {
       this.darkMode = val
       this.$q.dark.set(val)
+      this.$q.localStorage.set('dark', val)
     }
   }
 }
