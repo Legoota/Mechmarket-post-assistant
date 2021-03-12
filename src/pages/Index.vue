@@ -255,7 +255,7 @@ export default {
       var res = ''
       if (this.commentWhenPm) res += 'Please comment when you PM me. '
       if (this.chat) res += 'Avoid using Reddit chat. '
-      res += this.regionOnly() + ' '
+      if (this.regionLock) res += this.regionOnly() + ' '
       if (this.proxy) res += 'Proxy available. '
 
       return res
