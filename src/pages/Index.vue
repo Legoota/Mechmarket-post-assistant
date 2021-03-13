@@ -87,14 +87,14 @@
             <div class="text-subtitle2">Editor</div>
             <q-editor v-model="editor"
             :toolbar="[
-              ['bold', 'italic', 'underline'],
+              ['bold', 'italic'],
               [{
                 label: $q.lang.editor.formatting,
                 icon: $q.iconSet.editor.formatting,
                 list: 'no-icons',
-                options: ['p', 'h3', 'h4', 'h5', 'h6']
+                options: ['p', 'h3', 'h4', 'h5']
               }],
-              ['quote', 'unordered', 'ordered', 'outdent', 'indent'],
+              ['quote', 'unordered', 'ordered'],
             ]"/>
             <br/>
             <div class="text-subtitle2">Usual options</div>
@@ -118,7 +118,7 @@
 
           <q-card-section class="q-pt-none">
             <div class="text-subtitle1 text-weight-bold">Title of post
-              <q-btn round size="xs" @click="copyTitle()" color="info" icon="content_copy" />
+              <q-btn :disable="location.length < 1" round size="xs" @click="copyTitle()" color="info" icon="content_copy" />
             </div> <br/>
             <code class="postPart">
 [{{countryDisp()}}] [H] {{haveDisp()}} [W] {{wantDisp()}}
@@ -192,7 +192,7 @@ export default {
       wantChecked: [],
       timestamp: null,
       noTimestamp: false,
-      editor: 'Write here...',
+      editor: '',
       chat: false,
       commentWhenPm: false,
       regionLock: false,
