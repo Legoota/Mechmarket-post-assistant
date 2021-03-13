@@ -93,6 +93,7 @@ export default {
   created () {
     if (this.$q.localStorage.getItem('dark') != null) {
       this.darkMode = this.$q.localStorage.getItem('dark')
+      this.$q.dark.set(this.darkMode)
     } else this.darkMode = this.$q.dark.isActive
   },
   data () {
@@ -105,9 +106,6 @@ export default {
   },
   mounted () {
     this.leftDrawerOpen = false
-    if (this.$q.localStorage.getItem('dark') != null) {
-      this.darkMode = this.$q.localStorage.getItem('dark')
-    }
   },
   watch: {
     '$q.dark.isActive' (val) { this.darkMode = val }
