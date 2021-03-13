@@ -85,7 +85,17 @@
             </div>
             <br/>
             <div class="text-subtitle2">Editor</div>
-            <q-editor v-model="editor" min-height="5rem" />
+            <q-editor v-model="editor"
+            :toolbar="[
+              ['bold', 'italic', 'underline'],
+              [{
+                label: $q.lang.editor.formatting,
+                icon: $q.iconSet.editor.formatting,
+                list: 'no-icons',
+                options: ['p', 'h3', 'h4', 'h5', 'h6']
+              }],
+              ['quote', 'unordered', 'ordered', 'outdent', 'indent'],
+            ]"/>
             <br/>
             <div class="text-subtitle2">Usual options</div>
             <q-checkbox v-model="commentWhenPm" label="Comment when PMing"/>
@@ -121,11 +131,19 @@
             <div class="text-subtitle1 text-weight-bold">Body of post
               <q-btn round size="xs" @click="copyPost()" color="info" icon="content_copy" />
             </div>
-<pre class="postPart">
-<code v-if="timestamp && !noTimestamp">[Timestamp]({{timestamp}}){{newLineTrailingSpaces()}}</code>
+<pre class="postPart" v-if="timestamp && !noTimestamp">
+<code>[Timestamp]({{timestamp}}){{newLineTrailingSpaces()}}</code>
 {{randomGreet+'!'+newLineTrailingSpaces()}}
 {{newLineTrailingSpaces()}}
-{{editor}}
+{{markdowntext}}
+{{newLineTrailingSpaces()}}
+{{options()+newLineTrailingSpaces()}}
+{{randomFarewell+'!'}}
+</pre>
+<pre class="postPart" v-else>
+{{randomGreet+'!'+newLineTrailingSpaces()}}
+{{newLineTrailingSpaces()}}
+{{markdowntext}}
 {{newLineTrailingSpaces()}}
 {{options()+newLineTrailingSpaces()}}
 {{randomFarewell+'!'}}
@@ -155,6 +173,8 @@
 import { usa, canada } from '../assets/regions'
 import { greetings, farewells } from '../assets/politeness'
 import { copyToClipboard } from 'quasar'
+const TurndownService = require('turndown').default
+var tds = new TurndownService()
 
 const regions = ['CA', 'EU', 'US', 'Rest of world']
 
@@ -176,7 +196,8 @@ export default {
       chat: false,
       commentWhenPm: false,
       regionLock: false,
-      proxy: false
+      proxy: false,
+      markdowntext: ''
     }
   },
   watch: {
@@ -185,6 +206,9 @@ export default {
       if (n === 'CA') this.detailRegion = canada
       else if (n === 'US') this.detailRegion = usa
       else this.detailRegion = []
+    },
+    editor (n) {
+      this.markdowntext = tds.turndown(n)
     }
   },
   computed: {
