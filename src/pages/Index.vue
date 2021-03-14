@@ -131,23 +131,24 @@
             <div class="text-subtitle1 text-weight-bold">Body of post
               <q-btn round size="xs" @click="copyPost()" color="info" icon="content_copy" />
             </div>
-<pre class="postPart" v-if="timestamp && !noTimestamp">
-<code>[Timestamp]({{timestamp}}){{newLineTrailingSpaces()}}</code>
+            <div class="postPart" id="postBody">
+<pre v-if="timestamp && !noTimestamp">
+[Timestamp]({{timestamp}}){{newLineTrailingSpaces()}}
+</pre>
+<pre>
 {{randomGreet+'!'+newLineTrailingSpaces()}}
 {{newLineTrailingSpaces()}}
-{{markdowntext}}
-{{newLineTrailingSpaces()}}
-{{options()+newLineTrailingSpaces()}}
-{{randomFarewell+'!'}}
 </pre>
-<pre class="postPart" v-else>
-{{randomGreet+'!'+newLineTrailingSpaces()}}
+<pre v-if="markdowntext && markdowntext.length > 0">
+{{markdowntext+newLineTrailingSpaces()}}
 {{newLineTrailingSpaces()}}
-{{markdowntext}}
-{{newLineTrailingSpaces()}}
-{{options()+newLineTrailingSpaces()}}
-{{randomFarewell+'!'}}
 </pre>
+<pre v-if="regionLock || proxy || commentWhenPm || chat">
+{{options()+newLineTrailingSpaces()}}
+{{newLineTrailingSpaces()}}
+</pre>
+<pre>{{randomFarewell+'!'}}</pre>
+            </div>
           </q-card-section>
         </q-card>
       </div>
@@ -253,7 +254,7 @@ export default {
         })
     },
     copyPost () {
-      copyToClipboard('//TODO')
+      copyToClipboard(this.getWholePostBody())
         .then(() => {
           this.$q.notify({
             message: 'Copied to clipboard',
@@ -266,6 +267,10 @@ export default {
             color: 'negative'
           })
         })
+    },
+    getWholePostBody () {
+      const copyText = document.getElementById('postBody').textContent
+      return copyText
     },
     newLineTrailingSpaces () {
       return '  '
@@ -282,7 +287,7 @@ export default {
       if (this.regionLock) res += this.regionOnly() + ' '
       if (this.proxy) res += 'Proxy available. '
 
-      return res
+      return res.trim()
     }
   }
 }
